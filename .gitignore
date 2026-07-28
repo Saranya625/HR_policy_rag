@@ -3,3 +3,7 @@ rag_env/
 
 # Environment file
 .env
+
+data\faiss_index
+
+src\__pycache__
