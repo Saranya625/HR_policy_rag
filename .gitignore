@@ -4,6 +4,8 @@ rag_env/
 # Environment file
 .env
 
-data\faiss_index
+# FAISS index
+data/faiss_index/
 
-src\__pycache__
+# Python cache
+src/__pycache__/
