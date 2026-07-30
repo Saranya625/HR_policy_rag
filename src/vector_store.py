@@ -8,11 +8,22 @@ from src.embeddings import get_embeddings_model
 # build_vector_store 
 
 def build_vector_store(chunks):
-    """Embed every chunk and build 
-    a searchable FAISS index in memory."""
-    embeddings_model = get_embeddings_model()
-    return FAISS.from_documents(chunks, embeddings_model)
+    print("=" * 60)
+    print("Inside build_vector_store")
+    print("Chunks:", len(chunks))
 
+    for i, chunk in enumerate(chunks[:3]):
+        print(f"Chunk {i}: {len(chunk.page_content)} chars")
+
+    embeddings_model = get_embeddings_model()
+
+    print("Testing first chunk...")
+    emb = embeddings_model.embed_query(chunks[0].page_content)
+    print("First chunk embedded successfully.")
+    print("Embedding dimension:", len(emb))
+
+    print("Calling FAISS.from_documents()...")
+    return FAISS.from_documents(chunks, embeddings_model)
 
 ## save vector store 
 

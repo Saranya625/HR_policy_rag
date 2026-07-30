@@ -18,7 +18,7 @@ from src.vector_store import (
     save_vector_store,
     vector_store_exists,
 )
-
+import traceback
 
 def build_vector_store_for_document(file_path: str = config.DATA_FILE_PATH):
     """Load + split + embed the document, reusing a saved index if we have one."""
@@ -49,11 +49,58 @@ def build_hr_assistant(file_path: str = config.DATA_FILE_PATH):
     agent = create_hr_agent(llm, [search_tool])
 
     return agent
-    
+
+
+def build_hr_assistant_from_upload(file_bytes: bytes, filename: str):
+    """Build a dynamic RAG agent for user-uploaded custom HR documents."""
+    config.check_api_keys()
+
+    from src.document_loader import load_document_from_bytes
+    documents = load_document_from_bytes(file_bytes, filename)
+    chunks = split_into_chunks(documents)
+
+    vector_store = build_vector_store(chunks)
+    retriever = get_retriever(vector_store)
+    search_tool = create_search_tool(retriever)
+
+    llm = get_llm()
+    agent = create_hr_agent(llm, [search_tool])
+
+    return agent, len(chunks)
+
+
+def _extract_answer(response) -> str:
+    """Normalize responses from supported LangChain agent styles."""
+    if isinstance(response, dict):
+        if "messages" in response and response["messages"]:
+            final_message = response["messages"][-1]
+            return getattr(final_message, "content", str(final_message))
+        if "output" in response:
+            return response["output"]
+    return str(response)
+
+
 
 
 def ask(agent, question: str) -> str:
-    """Ask the agent a question and 
-    return its final answer as plain text."""
-    response = agent.invoke({"messages": [{"role": "user", "content": question}]})
-    return response["messages"][-1].content
+    print("=" * 60)
+    print("Question:", question)
+    print("Agent type:", type(agent))
+
+    try:
+        if agent.__class__.__name__ == "AgentExecutor":
+            response = agent.invoke({"input": question})
+        else:
+            try:
+                response = agent.invoke(
+                    {"messages": [{"role": "user", "content": question}]}
+                )
+            except (KeyError, TypeError, ValueError):
+                response = agent.invoke({"input": question})
+
+        print("Raw response:", response)
+        return _extract_answer(response)
+
+    except Exception:
+        traceback.print_exc()
+        raise
