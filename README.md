@@ -151,6 +151,4 @@ The main settings live in `src/config.py`:
 - The saved FAISS index is loaded with deserialization enabled because it is generated locally by this app. Do not load an index from an untrusted source.
 - The current document and UI are demo-oriented; adapt the source policy and branding before production use.
 
-## License
 
-No license has been specified for this repository.
