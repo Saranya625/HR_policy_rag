@@ -1,6 +1,5 @@
 """Chat interface components."""
 
-import re
 import streamlit as st
 
 from typing import List, Dict, Optional, Iterable
@@ -11,31 +10,11 @@ from typing import List, Dict, Optional, Iterable
 # ============================================================
 
 def _inject_chat_styles():
-    """Inject styles for the assistant chat UI."""
+    """Inject styles specific to the assistant page."""
 
     st.markdown(
         """
 <style>
-
-.assistant-welcome {
-    text-align: center;
-    padding: 42px 20px 26px 20px;
-}
-
-.assistant-welcome-title {
-    font-size: 30px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 8px;
-}
-
-.assistant-welcome-subtitle {
-    font-size: 15px;
-    color: var(--text-secondary);
-}
-
-
-/* Suggested prompt buttons */
 
 div[data-testid="column"] button {
     border-radius: 14px !important;
@@ -51,15 +30,9 @@ div[data-testid="column"] button:hover {
     background: var(--surface-hover) !important;
 }
 
-
-/* Chat messages */
-
 [data-testid="stChatMessage"] {
     padding: 8px 0;
 }
-
-
-/* Chat input */
 
 [data-testid="stChatInput"] {
     padding-bottom: 18px;
@@ -68,8 +41,6 @@ div[data-testid="column"] button:hover {
 [data-testid="stChatInput"] textarea {
     color: var(--text) !important;
     background: var(--surface) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 18px !important;
     font-size: 15px !important;
 }
 
@@ -78,25 +49,14 @@ div[data-testid="column"] button:hover {
     opacity: 1 !important;
 }
 
-
-/* Input container */
-
 [data-testid="stChatInput"] > div {
     border-radius: 18px !important;
-}
-
-
-/* Clear chat button */
-
-.clear-chat-wrapper {
-    margin-top: 18px;
 }
 
 </style>
         """,
         unsafe_allow_html=True,
     )
-
 
 # ============================================================
 # WELCOME
@@ -105,19 +65,29 @@ div[data-testid="column"] button:hover {
 def render_welcome():
     """Render assistant welcome section."""
 
-    st.markdown(
+    st.html(
         """
-<div class="assistant-welcome">
-    <div class="assistant-welcome-title">
-        How can I help you today?
-    </div>
+        <div style="
+            text-align: center;
+            padding: 32px 20px 24px 20px;
+        ">
+            <div style="
+                font-size: 30px;
+                font-weight: 700;
+                color: var(--text);
+                margin-bottom: 8px;
+            ">
+                How can I help you today?
+            </div>
 
-    <div class="assistant-welcome-subtitle">
-        Ask anything about your HR policies
-    </div>
-</div>
-        """,
-        unsafe_allow_html=True,
+            <div style="
+                font-size: 15px;
+                color: var(--text-secondary);
+            ">
+                Ask anything about your HR policies
+            </div>
+        </div>
+        """
     )
 
 
@@ -141,13 +111,9 @@ def render_suggested_prompts(
 
     selected_prompt = None
 
-    cols_per_row = 2
+    for i in range(0, len(prompts), 2):
 
-    for i in range(0, len(prompts), cols_per_row):
-
-        row_prompts = prompts[
-            i:i + cols_per_row
-        ]
+        row_prompts = prompts[i:i + 2]
 
         cols = st.columns(
             len(row_prompts),
@@ -161,12 +127,23 @@ def render_suggested_prompts(
 
             with col:
 
+                # Wrapper used to scope prompt-specific CSS
+                st.markdown(
+                    '<div class="assistant-prompt">',
+                    unsafe_allow_html=True,
+                )
+
                 if st.button(
                     prompt,
                     key=f"prompt_{i}_{hash(prompt)}",
                     use_container_width=True,
                 ):
                     selected_prompt = prompt
+
+                st.markdown(
+                    "</div>",
+                    unsafe_allow_html=True,
+                )
 
     return selected_prompt
 
@@ -182,7 +159,6 @@ def render_chat_message(
     """Render one chat message."""
 
     with st.chat_message(role):
-
         st.markdown(content)
 
 
@@ -209,12 +185,53 @@ def render_conversation(
 
 def render_stream(
     stream: Iterable[str],
+    thinking=None,
 ) -> str:
-    """
-    Render a streaming response.
+    """Render streaming response without an empty assistant box."""
 
-    Returns:
-        Complete generated response.
-    """
+    answer = ""
+    first_chunk = True
+    response_placeholder = None
 
-    return st.write_stream(stream)
+    for chunk in stream:
+
+        # ----------------------------------------------------
+        # FIRST RESPONSE CHUNK
+        # ----------------------------------------------------
+
+        if first_chunk:
+
+            first_chunk = False
+
+            # Remove Thinking...
+            if thinking is not None:
+                thinking.empty()
+
+            # Create assistant message ONLY after
+            # the first response chunk arrives
+            with st.chat_message("assistant"):
+                response_placeholder = st.empty()
+
+        # ----------------------------------------------------
+        # ADD CHUNK
+        # ----------------------------------------------------
+
+        answer += str(chunk)
+
+        # ----------------------------------------------------
+        # UPDATE RESPONSE
+        # ----------------------------------------------------
+
+        if response_placeholder is not None:
+            response_placeholder.markdown(answer)
+
+    # --------------------------------------------------------
+    # NO RESPONSE
+    # --------------------------------------------------------
+
+    if first_chunk:
+
+        if thinking is not None:
+            thinking.empty()
+
+    return answer

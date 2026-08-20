@@ -3,15 +3,14 @@
 import streamlit as st
 
 from ui.components.layout import page_header
+
 from ui.components.chat import (
     render_suggested_prompts,
     render_conversation,
     render_stream,
 )
 
-from src.pipeline import (
-    ask_stream,
-)
+from src.pipeline import ask_stream
 
 
 def render_assistant_page():
@@ -27,14 +26,14 @@ def render_assistant_page():
     )
 
     # ========================================================
-    # CHAT STATE
+    # INITIALIZE CHAT STATE
     # ========================================================
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
     # ========================================================
-    # WELCOME + SUGGESTIONS
+    # SUGGESTED PROMPTS
     # ========================================================
 
     if not st.session_state.messages:
@@ -50,6 +49,10 @@ def render_assistant_page():
             suggested_prompts
         )
 
+        # ----------------------------------------------------
+        # User selected a suggested prompt
+        # ----------------------------------------------------
+
         if selected_prompt:
 
             _process_query(
@@ -59,7 +62,7 @@ def render_assistant_page():
             st.rerun()
 
     # ========================================================
-    # CONVERSATION
+    # CONVERSATION HISTORY
     # ========================================================
 
     if st.session_state.messages:
@@ -82,16 +85,14 @@ def render_assistant_page():
             user_query
         )
 
-        st.rerun()
-
     # ========================================================
-    # ACTIONS
+    # ACTION BUTTONS
     # ========================================================
 
     if st.session_state.messages:
 
         st.markdown(
-            "<div style='height: 8px'></div>",
+            "<div style='height: 12px'></div>",
             unsafe_allow_html=True,
         )
 
@@ -131,14 +132,19 @@ def render_assistant_page():
 # PROCESS QUERY
 # ============================================================
 
-def _process_query(
-    query: str,
-):
+def _process_query(query: str):
     """Process a user query with streaming."""
 
-    # --------------------------------------------------------
-    # Save user message
-    # --------------------------------------------------------
+    # ========================================================
+    # DISPLAY USER MESSAGE
+    # ========================================================
+
+    with st.chat_message("user"):
+        st.markdown(query)
+
+    # ========================================================
+    # STORE USER MESSAGE
+    # ========================================================
 
     st.session_state.messages.append(
         {
@@ -147,47 +153,74 @@ def _process_query(
         }
     )
 
-    # --------------------------------------------------------
-    # User message
-    # --------------------------------------------------------
+    # ========================================================
+    # THINKING INDICATOR
+    # ========================================================
 
-    with st.chat_message("user"):
+    thinking = st.empty()
 
-        st.markdown(query)
+    thinking.markdown(
+        """
+        <div style="
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 8px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        ">
+            <span style="font-size: 9px;">●</span>
+            <span style="margin-left: 6px;">Thinking...</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    # --------------------------------------------------------
-    # Assistant response
-    # --------------------------------------------------------
+    try:
 
-    with st.chat_message("assistant"):
+        # ====================================================
+        # CREATE STREAM
+        # ====================================================
 
-        try:
+        stream = ask_stream(
+            st.session_state.agent,
+            query,
+        )
 
-            answer = render_stream(
-                ask_stream(
-                    st.session_state.agent,
-                    query,
-                )
+        # ====================================================
+        # ASSISTANT RESPONSE
+        # ====================================================
+
+
+        answer = render_stream(
+                stream,
+                thinking=thinking,
             )
 
-            st.session_state.messages.append(
-                {
-                    "role": "assistant",
-                    "content": answer,
-                }
-            )
+        # ====================================================
+        # STORE ASSISTANT MESSAGE
+        # ====================================================
 
-        except Exception as e:
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": answer,
+            }
+        )
 
-            error_message = (
-                f"An error occurred: {str(e)}"
-            )
+    except Exception as e:
 
+        thinking.empty()
+
+        error_message = (
+            f"An error occurred: {str(e)}"
+        )
+
+        with st.chat_message("assistant"):
             st.error(error_message)
 
-            st.session_state.messages.append(
-                {
-                    "role": "assistant",
-                    "content": error_message,
-                }
-            )
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": error_message,
+            }
+        )

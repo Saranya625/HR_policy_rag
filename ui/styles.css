@@ -102,21 +102,13 @@ p {
 }
 
 /* Streamlit Container as Card */
-div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    box-shadow: var(--shadow-sm);
-}
-
+div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"],
 div[data-testid="column"] > div[data-testid="stVerticalBlock"] {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
-    box-shadow: var(--shadow-sm);
-    height: 100%;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
 }
 
 /* Button System */
@@ -387,4 +379,133 @@ section[data-testid="stFileUploadDropzone"]:hover {
     .stTabs [data-baseweb="tab-list"] {
         width: 100%;
     }
+}
+/* ============================================================
+   CHAT INPUT / BOTTOM CONTAINER
+   ============================================================ */
+
+/* Streamlit fixed bottom chat area */
+div[data-testid="stBottomBlockContainer"] {
+    background: var(--bg) !important;
+    border-top: none !important;
+    box-shadow: none !important;
+}
+
+/* Inner bottom container */
+div[data-testid="stBottomBlockContainer"] > div {
+    background: var(--bg) !important;
+}
+
+/* Chat input wrapper */
+div[data-testid="stChatInput"] {
+    background: transparent !important;
+    max-width: 760px !important;
+    margin: 12px auto 20px auto !important;
+}
+
+/* Actual input box */
+div[data-testid="stChatInput"] > div {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+/* Textarea */
+div[data-testid="stChatInput"] textarea {
+    background: transparent !important;
+    color: var(--text) !important;
+}
+
+/* Placeholder */
+div[data-testid="stChatInput"] textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 1 !important;
+}
+
+/* Send button */
+div[data-testid="stChatInput"] button {
+    background: var(--primary) !important;
+    color: white !important;
+    border-radius: var(--radius-full) !important;
+}
+
+div[data-testid="stChatInput"] button:hover {
+    background: var(--primary-hover) !important;
+}
+/* ============================================================
+   CHAT MESSAGES
+   ============================================================ */
+
+div[data-testid="stChatMessage"] {
+    background: transparent !important;
+    padding: 8px 0 !important;
+}
+
+/* Hide avatars */
+div[data-testid="stChatMessageAvatar"] {
+    display: none !important;
+}
+
+/* Message content */
+div[data-testid="stChatMessageContent"] {
+    max-width: 720px !important;
+    padding: 14px 18px !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-sm) !important;
+    color: var(--text) !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+}
+
+/* Make all markdown content readable */
+div[data-testid="stChatMessageContent"] p,
+div[data-testid="stChatMessageContent"] li,
+div[data-testid="stChatMessageContent"] span,
+div[data-testid="stChatMessageContent"] div,
+div[data-testid="stChatMessageContent"] td,
+div[data-testid="stChatMessageContent"] th {
+    color: var(--text) !important;
+}
+
+/* Headings */
+div[data-testid="stChatMessageContent"] h1,
+div[data-testid="stChatMessageContent"] h2,
+div[data-testid="stChatMessageContent"] h3,
+div[data-testid="stChatMessageContent"] h4 {
+    color: var(--text) !important;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+/* Lists */
+div[data-testid="stChatMessageContent"] ul,
+div[data-testid="stChatMessageContent"] ol {
+    color: var(--text) !important;
+    padding-left: 22px;
+}
+
+/* ============================================================
+   SUGGESTED PROMPTS
+   ============================================================ */
+
+div[data-testid="column"] .stButton button {
+    width: 100% !important;
+    min-height: 48px !important;
+    background: var(--surface) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    box-shadow: none !important;
+}
+
+div[data-testid="column"] .stButton button:hover {
+    background: var(--surface-hover) !important;
+    border-color: var(--border-strong) !important;
+    color: var(--text) !important;
+    transform: translateY(-1px);
 }
