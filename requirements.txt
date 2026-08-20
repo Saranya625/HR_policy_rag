@@ -25,3 +25,6 @@ ipykernel
 # web app 
 
 streamlit
+
+# for pdf 
+pypdf

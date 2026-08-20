@@ -88,7 +88,7 @@ The repository includes both a command-line demo and a Streamlit chat interface.
 ### Streamlit chat interface
 
 ```bash
-streamlit run app.py
+E:\project\rag_env\Scripts\python.exe -m streamlit run app.py
 ```
 
 Streamlit opens the HR Policy Assistant in your browser. Ask questions such as:

@@ -1,0 +1,390 @@
+/* HR Intelligence - Global Styles */
+
+/* Reset and Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #FAFAFA;
+    --surface: #FFFFFF;
+    --surface-hover: #F8F9FA;
+    --border: #E5E7EB;
+    --border-strong: #D1D5DB;
+    --text: #111827;
+    --text-secondary: #6B7280;
+    --text-muted: #9CA3AF;
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --primary-light: #DBEAFE;
+    --success: #10B981;
+    --success-light: #D1FAE5;
+    --warning: #F59E0B;
+    --warning-light: #FEF3C7;
+    --danger: #EF4444;
+    --danger-light: #FEE2E2;
+    
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 64px;
+    
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.10);
+    
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    
+    --max-width: 1200px;
+    --nav-height: 64px;
+}
+
+html, body, .stApp, [data-testid="stAppViewContainer"], .main {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "SF Pro Display", sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Hide Streamlit defaults */
+header[data-testid="stHeader"],
+#MainMenu,
+footer,
+div[data-testid="stToolbar"],
+div[data-testid="stDecoration"],
+div[data-testid="stStatusWidget"] {
+    display: none !important;
+}
+
+/* Main Container */
+.main .block-container {
+    max-width: var(--max-width) !important;
+    padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-3xl) !important;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text);
+    font-weight: 600;
+    margin: 0;
+}
+
+p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Card Component */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.card:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+}
+
+/* Streamlit Container as Card */
+div[data-testid="stVerticalBlock"] > div[data-testid="stVerticalBlock"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+div[data-testid="column"] > div[data-testid="stVerticalBlock"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+}
+
+/* Button System */
+.stButton button {
+    min-height: 40px !important;
+    padding: var(--spacing-sm) var(--spacing-lg) !important;
+    border-radius: var(--radius-full) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid var(--border) !important;
+    background: var(--surface) !important;
+    color: var(--text) !important;
+}
+
+.stButton button:hover {
+    border-color: var(--border-strong) !important;
+    background: var(--surface-hover) !important;
+    transform: translateY(-1px);
+}
+
+/* Primary Button */
+.btn-primary button {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: white !important;
+}
+
+.btn-primary button:hover {
+    background: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+}
+
+/* Secondary Button */
+.btn-secondary button {
+    background: transparent !important;
+    border-color: var(--border) !important;
+}
+
+/* Danger Button */
+.btn-danger button {
+    background: var(--danger) !important;
+    border-color: var(--danger) !important;
+    color: white !important;
+}
+
+.btn-danger button:hover {
+    background: #DC2626 !important;
+    border-color: #DC2626 !important;
+}
+
+/* Navigation Tabs */
+.stTabs {
+    background: transparent;
+}
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: var(--spacing-sm);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    padding: var(--spacing-xs);
+    display: inline-flex;
+}
+
+.stTabs [data-baseweb="tab"] {
+    height: 40px;
+    padding: 0 var(--spacing-lg);
+    color: var(--text-secondary) !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: var(--radius-full) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    background: var(--surface-hover) !important;
+    color: var(--text) !important;
+}
+
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+/* Chat Messages */
+div[data-testid="stChatMessage"] {
+    padding: var(--spacing-sm) 0 !important;
+    background: transparent !important;
+}
+
+div[data-testid="stChatMessageAvatar"],
+div[data-testid="stChatMessage"] > div:first-child {
+    display: none !important;
+}
+
+div[data-testid="stChatMessageContent"] {
+    max-width: 680px !important;
+    padding: var(--spacing-md) var(--spacing-lg) !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-sm) !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+}
+
+/* User messages - right aligned */
+div[data-testid="stChatMessage"]:has([aria-label="user avatar"]) {
+    justify-content: flex-end !important;
+}
+
+div[data-testid="stChatMessage"]:has([aria-label="user avatar"]) div[data-testid="stChatMessageContent"] {
+    background: var(--primary-light) !important;
+    border-color: var(--primary) !important;
+    margin-left: auto !important;
+}
+
+/* Assistant messages - left aligned */
+div[data-testid="stChatMessage"]:has([aria-label="assistant avatar"]) div[data-testid="stChatMessageContent"] {
+    margin-right: auto !important;
+}
+
+/* Fix text color in chat messages - ensure all content is visible */
+div[data-testid="stChatMessageContent"],
+div[data-testid="stChatMessageContent"] *,
+div[data-testid="stChatMessageContent"] p,
+div[data-testid="stChatMessageContent"] li,
+div[data-testid="stChatMessageContent"] td,
+div[data-testid="stChatMessageContent"] th,
+div[data-testid="stChatMessageContent"] span,
+div[data-testid="stChatMessageContent"] div,
+div[data-testid="stChatMessageContent"] code,
+div[data-testid="stChatMessageContent"] pre {
+    color: var(--text) !important;
+}
+
+div[data-testid="stChatMessageContent"] table,
+div[data-testid="stChatMessageContent"] thead,
+div[data-testid="stChatMessageContent"] tbody,
+div[data-testid="stChatMessageContent"] tr {
+    color: var(--text) !important;
+}
+
+div[data-testid="stChatMessageContent"] ul,
+div[data-testid="stChatMessageContent"] ol {
+    color: var(--text) !important;
+    padding-left: 20px;
+}
+
+div[data-testid="stChatMessageContent"] h1,
+div[data-testid="stChatMessageContent"] h2,
+div[data-testid="stChatMessageContent"] h3,
+div[data-testid="stChatMessageContent"] h4,
+div[data-testid="stChatMessageContent"] h5,
+div[data-testid="stChatMessageContent"] h6 {
+    color: var(--text) !important;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+div[data-testid="stChatMessageContent"] h1:first-child,
+div[data-testid="stChatMessageContent"] h2:first-child,
+div[data-testid="stChatMessageContent"] h3:first-child {
+    margin-top: 0;
+}
+
+/* Chat Input */
+div[data-testid="stChatInput"] {
+    max-width: 760px !important;
+    margin: var(--spacing-lg) auto !important;
+    border-radius: var(--radius-xl) !important;
+}
+
+div[data-testid="stChatInput"] > div {
+    min-height: 56px !important;
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: var(--shadow-md) !important;
+    transition: all 0.2s ease !important;
+}
+
+div[data-testid="stChatInput"]:focus-within > div {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px var(--primary-light), var(--shadow-md) !important;
+}
+
+div[data-testid="stChatInput"] textarea {
+    min-height: 54px !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    padding: var(--spacing-md) !important;
+}
+
+div[data-testid="stChatInput"] button {
+    background: var(--primary) !important;
+    border-radius: var(--radius-full) !important;
+}
+
+div[data-testid="stChatInput"] button:hover {
+    background: var(--primary-hover) !important;
+}
+
+/* File Uploader */
+section[data-testid="stFileUploadDropzone"] {
+    padding: var(--spacing-2xl) !important;
+    background: var(--surface) !important;
+    border: 2px dashed var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    transition: all 0.2s ease !important;
+}
+
+section[data-testid="stFileUploadDropzone"]:hover {
+    border-color: var(--primary) !important;
+    background: var(--primary-light) !important;
+}
+
+/* Status Pills */
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-success {
+    background: var(--success-light);
+    color: var(--success);
+}
+
+.status-warning {
+    background: var(--warning-light);
+    color: var(--warning);
+}
+
+.status-info {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease both;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main .block-container {
+        padding: var(--spacing-md) var(--spacing-md) var(--spacing-xl) !important;
+    }
+    
+    .stTabs [data-baseweb="tab-list"] {
+        width: 100%;
+    }
+}

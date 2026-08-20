@@ -1,6 +1,6 @@
 import os
 from langchain_community.vectorstores import FAISS
-
+import time
 from src import config 
 from src.embeddings import get_embeddings_model
 
@@ -8,22 +8,45 @@ from src.embeddings import get_embeddings_model
 # build_vector_store 
 
 def build_vector_store(chunks):
+    """Build FAISS vector store with controlled Jina embedding batches."""
+
+    if not chunks:
+        raise ValueError("No chunks provided.")
+
     print("=" * 60)
     print("Inside build_vector_store")
     print("Chunks:", len(chunks))
 
-    for i, chunk in enumerate(chunks[:3]):
-        print(f"Chunk {i}: {len(chunk.page_content)} chars")
-
     embeddings_model = get_embeddings_model()
 
-    print("Testing first chunk...")
-    emb = embeddings_model.embed_query(chunks[0].page_content)
-    print("First chunk embedded successfully.")
-    print("Embedding dimension:", len(emb))
+    batch_size = 25
+    vector_store = None
 
-    print("Calling FAISS.from_documents()...")
-    return FAISS.from_documents(chunks, embeddings_model)
+    for start in range(0, len(chunks), batch_size):
+
+        batch = chunks[start:start + batch_size]
+
+        print(
+            f"Embedding chunks "
+            f"{start + 1}-{min(start + batch_size, len(chunks))} "
+            f"of {len(chunks)}"
+        )
+
+        if vector_store is None:
+            vector_store = FAISS.from_documents(
+                batch,
+                embeddings_model
+            )
+        else:
+            vector_store.add_documents(batch)
+
+        # Give Jina's rate limit some breathing room
+        time.sleep(2)
+
+    print("FAISS vector store created successfully.")
+    print("=" * 60)
+
+    return vector_store
 
 ## save vector store 
 

@@ -9,3 +9,8 @@ data/faiss_index/
 
 # Python cache
 src/__pycache__/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
